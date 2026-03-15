@@ -1,5 +1,7 @@
 import { useState, useEffect, useCallback, lazy, Suspense } from 'react';
+import { Link } from 'react-router-dom';
 import './index.css';
+import './map.css';
 import { useSpaceWeather } from './hooks/useSpaceWeather';
 import { useVisibility }   from './hooks/useVisibility';
 import { useSightings, useSightingPins, SightingForm } from './components/SightingLayer';
@@ -153,12 +155,17 @@ export default function App() {
 
       {/* ── Header ─────────────────────────────────────────────────────── */}
       <header className="app-header">
-        <div className="logo">✦ ORION</div>
+        <div className="header-left">
+          <div className="logo">✦ ORION</div>
+          <Link className="icon-btn back-home-btn" to="/" title="Return to homepage">
+            ← HOME
+          </Link>
+        </div>
         <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--text-dim)', letterSpacing: '0.1em' }}>
           AURORA PLATFORM
         </div>
         {ovation?.forecastTime && (
-          <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--text-dim)' }}>
+          <div className="ovation-time" style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--text-dim)' }}>
             OVATION {new Date(ovation.forecastTime).toLocaleTimeString()}
           </div>
         )}

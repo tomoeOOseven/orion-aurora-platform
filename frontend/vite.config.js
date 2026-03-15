@@ -2,6 +2,9 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 
+const FRONTEND_PORT = Number(process.env.FRONTEND_PORT || 7000);
+const BACKEND_PORT = Number(process.env.BACKEND_PORT || 7001);
+
 export default defineConfig({
   plugins: [
     react(),
@@ -45,8 +48,22 @@ export default defineConfig({
     }),
   ],
   server: {
+    port: FRONTEND_PORT,
+    strictPort: true,
     proxy: {
-      '/api': { target: 'http://localhost:3001', changeOrigin: true },
+      '/api': {
+        target: `http://localhost:${BACKEND_PORT}`,
+        changeOrigin: true,
+        configure: (proxy) => {
+          proxy.on('error', (err, req, res) => {
+            // Backend down/restarting should not flood the dev console with hard proxy stack traces.
+            if (res && !res.headersSent) {
+              res.writeHead(503, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify({ error: 'Backend unavailable', code: err.code || 'PROXY_ERROR' }));
+            }
+          });
+        },
+      },
     },
   },
 });

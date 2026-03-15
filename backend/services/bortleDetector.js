@@ -7,9 +7,6 @@
  */
 
 const axios = require('axios');
-const https = require('https');
-
-const agent = new https.Agent({ keepAlive: false });
 
 const PLACE_BORTLE = {
   city: 8, city_block: 8, commercial: 8, industrial: 8,
@@ -20,58 +17,14 @@ const PLACE_BORTLE = {
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
-// Circuit breaker for provider instability.
-const NOMINATIM_FAILURE_THRESHOLD = 3;
-const NOMINATIM_COOLDOWN_MS = 5 * 60 * 1000;
-let consecutiveFailures = 0;
-let nominatimCooldownUntil = 0;
-
-function isRetriableNetworkError(err) {
-  const code = err?.code;
-  return code === 'ECONNRESET' || code === 'ETIMEDOUT' || code === 'ECONNABORTED' || code === 'EAI_AGAIN';
-}
-
-function estimateBortleFallback(lat, lon) {
-  const absLat = Math.abs(lat);
-
-  // Conservative fallback heuristic: avoid claiming excellent darkness without data.
-  // Polar/high-lat regions are often darker away from settlements, but still default safely.
-  let bortle = 5;
-  if (absLat >= 65) bortle = 4;
-
-  return {
-    bortle,
-    source: 'fallback',
-    placeType: 'unknown',
-    reason: 'nominatim_unavailable',
-    radiance: null,
-  };
-}
-
 async function bortleFromNominatim(lat, lon, attempt = 1) {
   try {
-    const url = 'https://nominatim.openstreetmap.org/reverse';
+    const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&zoom=10&format=json&addressdetails=1`;
     const res = await axios.get(url, {
-      params: {
-        lat,
-        lon,
-        zoom: 10,
-        format: 'json',
-        addressdetails: 1,
-      },
       timeout: 15000,
-      httpsAgent: agent,
-      headers: {
-        'User-Agent': 'aurora-platform/1.0 (hackathon research)',
-        Accept: 'application/json',
-      },
+      headers: { 'User-Agent': 'aurora-platform/1.0 (hackathon research)' },
     });
     const { type, address = {} } = res.data;
-
-    // No country = ocean / international waters / uninhabited polar cap.
-    if (!address.country && !address.country_code) {
-      return { bortle: 5, source: 'nominatim', isOcean: true, placeType: type || 'unknown' };
-    }
 
     let bortle;
     if      (address.city || address.city_district) bortle = 8;
@@ -86,13 +39,16 @@ async function bortleFromNominatim(lat, lon, attempt = 1) {
     console.log(`[bortleDetector] Nominatim (attempt ${attempt}) lat=${lat.toFixed(2)} lon=${lon.toFixed(2)} type=${type} → Bortle ${bortle}`);
     return { bortle, source: 'nominatim', placeType: type };
   } catch (e) {
+    // Identify retriable network errors
+    const code = e?.code;
     const status = e?.response?.status;
-    const retriableHttp = status === 429 || (status >= 500 && status <= 599);
-    const retriable = isRetriableNetworkError(e) || retriableHttp;
+    const isNetworkError = code === 'ECONNRESET' || code === 'ETIMEDOUT' || code === 'ECONNABORTED' || code === 'EAI_AGAIN';
+    const isServerError = status >= 500 && status <= 599;
+    const isRetriable = isNetworkError || isServerError || (status === 429);
 
-    if (attempt < 3 && retriable) {
+    if (attempt < 3 && isRetriable) {
       const delayMs = 1000 * Math.pow(2, attempt - 1);
-      console.warn(`[bortleDetector] Nominatim attempt ${attempt} failed (${e.message}), retrying in ${delayMs}ms...`);
+      console.warn(`[bortleDetector] Nominatim attempt ${attempt} failed (${code || status || e.message}), retrying in ${delayMs}ms…`);
       await sleep(delayMs);
       return bortleFromNominatim(lat, lon, attempt + 1);
     }
@@ -113,34 +69,21 @@ async function getBortleForLocation(lat, lon) {
   const hit = bortleCache.get(key);
   if (hit && Date.now() - hit.ts < CACHE_TTL) return { ...hit.data, cached: true };
 
-  // During cooldown, skip external call and serve fallback immediately.
-  if (Date.now() < nominatimCooldownUntil) {
-    const fallback = {
-      ...estimateBortleFallback(lat, lon),
-      source: 'fallback-cooldown',
-      cooldownUntil: new Date(nominatimCooldownUntil).toISOString(),
-    };
-    bortleCache.set(key, { data: fallback, ts: Date.now() - (CACHE_TTL - 15 * 60 * 1000) });
-    return fallback;
-  }
-
   try {
     const result = await bortleFromNominatim(lat, lon);
-    consecutiveFailures = 0;
     bortleCache.set(key, { data: result, ts: Date.now() });
     return result;
   } catch (err) {
-    consecutiveFailures += 1;
-    if (consecutiveFailures >= NOMINATIM_FAILURE_THRESHOLD) {
-      nominatimCooldownUntil = Date.now() + NOMINATIM_COOLDOWN_MS;
-      console.warn(`[bortleDetector] Nominatim unstable; entering cooldown for ${Math.round(NOMINATIM_COOLDOWN_MS / 1000)}s`);
-      consecutiveFailures = 0;
-    }
-
-    const fallback = estimateBortleFallback(lat, lon);
-    // Cache fallback for a shorter window so we recover quickly when provider returns.
+    // Network failure: always fallback gracefully to fixed Bortle 5
+    // This ensures visibility calculation never fails due to external API issues
+    const fallback = {
+      bortle: 5,
+      source: 'fallback',
+      reason: `nominatim_failed: ${err.code || err.message}`,
+      placeType: 'unknown',
+    };
+    console.warn(`[bortleDetector] Using fallback Bortle 5 for lat=${lat.toFixed(2)} lon=${lon.toFixed(2)} (${err.code || err.message})`);
     bortleCache.set(key, { data: fallback, ts: Date.now() - (CACHE_TTL - 30 * 60 * 1000) });
-    console.warn(`[bortleDetector] Falling back for lat=${lat.toFixed(2)} lon=${lon.toFixed(2)} (${err.message})`);
     return fallback;
   }
 }

@@ -165,8 +165,9 @@ async function computeVisibilityScore(lat, lon, ovationPoints) {
       moonIllumination: moonIllum,
       solarZenith: zenith,
       bortle,
-      bortleSource: bortleData.source,    // 'VIIRS-DNB', 'cache', or 'default'
-      radiance: bortleData.radiance,       // nW/cm²/sr — show to judges
+      bortleSource: bortleData.source,
+      bortleFallback: String(bortleData.source || '').includes('fallback'),
+      radiance: bortleData.radiance,
       computedAt: new Date().toISOString(),
     },
   };
@@ -227,10 +228,15 @@ async function findBestNearbyPoint(lat, lon, ovationPoints, radiusKm = 200, opti
     const chunk = clearCandidates.slice(i, i + CHUNK_SIZE);
     const withBortle = await Promise.all(chunk.map(async c => {
       const b = await getBortleForLocation(c.lat, c.lon);
-      return { ...c, bortle: b.bortle };
+      return { ...c, bortle: b.bortle, bortleSource: b.source };
     }));
 
-    const darkCandidates = withBortle.filter(c => c.bortle <= maxBortle);
+    // If provider is down and we are on fallback values, allow <=5 so routing still works.
+    const darkCandidates = withBortle.filter(c => {
+      if (c.bortle <= maxBortle) return true;
+      const fallbackSource = String(c.bortleSource || '').includes('fallback');
+      return fallbackSource && mode === 'strict' && c.bortle <= 5;
+    });
     if (darkCandidates.length === 0) continue;
 
     // Already nearest-first; pick nearest candidate in this chunk.

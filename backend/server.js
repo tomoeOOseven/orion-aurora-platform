@@ -16,10 +16,12 @@ const alertRoutes        = require('./routes/alerts');
 const sightingsRoutes    = require('./routes/sightings');
 
 const app  = express();
-const PORT = process.env.PORT || 3001;
+const FRONTEND_PORT = process.env.FRONTEND_PORT || 7000;
+const PORT = process.env.PORT || process.env.BACKEND_PORT || 7001;
+let servicesStarted = false;
 
 // ── Middleware ────────────────────────────────────────────────────────────────
-app.use(cors({ origin: process.env.FRONTEND_URL || 'http://localhost:5173' }));
+app.use(cors({ origin: process.env.FRONTEND_URL || `http://localhost:${FRONTEND_PORT}` }));
 app.use(express.json({ limit: '2mb' })); // allow base64 photo uploads
 app.use('/uploads', express.static(path.join(__dirname, 'data', 'sightings_photos')));
 app.use((req, _res, next) => {
@@ -56,18 +58,37 @@ app.use('/api/alerts',       alertRoutes);
 app.use('/api/sightings',    sightingsRoutes);
 app.get('/health', (_req, res) => res.json({ status: 'ok', uptime: process.uptime() }));
 
-// ── Polling schedule ──────────────────────────────────────────────────────────
-cron.schedule('* * * * *',    () => startPolling('solar_wind'));
-cron.schedule('*/30 * * * *', () => startPolling('ovation'));
-cron.schedule('*/15 * * * *', () => startPolling('kp'));
-cron.schedule('* * * * *',    () => startPolling('alerts'));
+function startBackgroundServices() {
+  if (servicesStarted) return;
+  servicesStarted = true;
 
-startPolling('solar_wind');
-startPolling('ovation');
-startPolling('kp');
-startPolling('alerts');
-startSubstormMonitor(broadcast);
-startAlertEngine(broadcast);
-initSightingsStore(broadcast);
+  // ── Polling schedule ────────────────────────────────────────────────────────
+  cron.schedule('* * * * *',    () => startPolling('solar_wind'));
+  cron.schedule('*/30 * * * *', () => startPolling('ovation'));
+  cron.schedule('*/15 * * * *', () => startPolling('kp'));
+  cron.schedule('* * * * *',    () => startPolling('alerts'));
 
-app.listen(PORT, () => console.log(`Aurora backend running on http://localhost:${PORT}`));
+  startPolling('solar_wind');
+  startPolling('ovation');
+  startPolling('kp');
+  startPolling('alerts');
+  startSubstormMonitor(broadcast);
+  startAlertEngine(broadcast);
+  initSightingsStore(broadcast);
+}
+
+const server = app.listen(PORT, () => {
+  console.log(`Aurora backend running on http://localhost:${PORT}`);
+  startBackgroundServices();
+});
+
+server.on('error', (err) => {
+  if (err && err.code === 'EADDRINUSE') {
+    console.error(`[startup] Port ${PORT} is already in use. Another backend process is already running.`);
+    console.error('[startup] Stop the existing process or run with a different BACKEND_PORT.');
+    process.exit(1);
+  }
+
+  console.error('[startup] Server failed to start:', err);
+  process.exit(1);
+});
