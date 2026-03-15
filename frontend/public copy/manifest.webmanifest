@@ -1,0 +1,16 @@
+{
+  "name": "Orion Aurora Platform",
+  "short_name": "Aurora",
+  "description": "Hyper-local aurora forecasting for astrophotographers",
+  "theme_color": "#0a0f1e",
+  "background_color": "#0a0f1e",
+  "display": "standalone",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

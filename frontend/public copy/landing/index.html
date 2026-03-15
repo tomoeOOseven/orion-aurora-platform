@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Landing</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="shortcut icon" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./landing.css" />
+  <style>
+    #hero-section {
+      transform-origin: center center;
+      will-change: transform, filter;
+    }
+
+    #scroll-transition {
+      position: fixed;
+      inset: 0;
+      z-index: 35;
+      pointer-events: none;
+      opacity: 0;
+      background:
+        radial-gradient(circle at center, rgba(37, 110, 196, 0.28) 0%, rgba(16, 27, 62, 0.82) 60%, rgba(8, 12, 24, 0.98) 100%);
+    }
+
+    #scroll-transition.is-active {
+      opacity: 1;
+      transition: opacity 0.6s ease;
+    }
+
+    .hero-content {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 0.95rem;
+      align-items: center;
+      text-align: center;
+      background: radial-gradient(circle at top left, rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.32));
+      border-radius: 20px;
+      padding: 1.35rem 1.1rem;
+      backdrop-filter: blur(9px);
+      border: 1px solid rgba(244, 234, 216, 0.2);
+      pointer-events: auto;
+      width: min(560px, 90vw);
+      margin: 0 auto;
+      transform: scale(0.86);
+      transform-origin: center center;
+    }
+
+    .chip {
+      padding: 0.3rem 0.75rem;
+      border: 1px solid rgba(244, 234, 216, 0.56);
+      border-radius: 999px;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #f4ead8;
+      background: rgba(5, 13, 28, 0.48);
+    }
+
+    .flower-title-shell {
+      position: relative;
+      left: 50%;
+      width: 90%;
+      transform: translate(-50%, -2%);
+      text-align: center;
+    }
+
+    .flower-text {
+      display: block;
+      line-height: 1.28;
+      color: #f4ead8;
+    }
+
+    .flower-heading {
+      font-size: clamp(2rem, 5.2vw, 3.3rem);
+      font-weight: 700;
+      margin: 0;
+      letter-spacing: 0.02em;
+    }
+
+    .lead {
+      margin: 1rem auto 0;
+      max-width: 38ch;
+      font-size: clamp(0.95rem, 1.9vw, 1.1rem);
+      color: rgba(244, 234, 216, 0.92);
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      justify-content: center;
+      width: 100%;
+      margin-top: 0.5rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.75rem 1.35rem;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: transform 0.25s ease, background-color 0.25s ease, color 0.25s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-primary {
+      background: #f4ead8;
+      color: #10203f;
+    }
+
+    .btn-primary .flower-text {
+      color: #000;
+    }
+
+    .btn-ghost {
+      border: 1px solid rgba(244, 234, 216, 0.62);
+      color: #f4ead8;
+      background: rgba(7, 16, 34, 0.35);
+    }
+
+    .word {
+      margin: -0.4em 0;
+      display: inline-block;
+      min-height: 1.3em;
+      overflow: hidden;
+      padding: 0 0.15em;
+    }
+
+    .character {
+      margin: 0 -0.15em;
+      display: inline-block;
+      padding: 0 0.15em;
+    }
+
+    .FlowerValleyText_character__4j45e {
+      opacity: 0;
+      transform: translateY(118%);
+      filter: blur(3px);
+    }
+
+    .FlowerValleyText_isVisible__8vqou {
+      animation: flowerCharIn var(--duration, 0.25s) cubic-bezier(0.21, 0.9, 0.18, 1) forwards;
+      animation-delay: var(--delay, 0s);
+    }
+
+    @keyframes flowerCharIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="scroll-transition" aria-hidden="true"></div>
+
+  <div class="-mt-60 h-screen" id="hero-section">
+    <script>
+      (() => {
+        var e = async t => { await (await t())(); };
+        (self.Astro || (self.Astro = {})).only = e;
+        window.dispatchEvent(new Event("astro:only"));
+      })();
+    </script>
+
+    <astro-island
+      uid="1zLHPm"
+      component-url="./_astro/Rocket3DContent.hnJ7ahGX.js"
+      component-export="default"
+      renderer-url="./_astro/client.CpC6DKdL.js"
+      props="{}"
+      client="only"
+      opts="{&quot;name&quot;:&quot;Rocket3DContent&quot;,&quot;value&quot;:&quot;react&quot;}"
+    >
+      <div class="backdrop-hue-rotate-15 z-0 w-full h-screen absolute bg-black">
+        <div class="h-full w-full z-0">
+          <div class="h-full w-full z-0 bg-black">
+            <div style="position: relative; width: 100%; height: 100%; overflow: hidden; pointer-events: auto;">
+              <div style="width: 100%; height: 100%;">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </astro-island>
+
+    <script type="module">
+      import rendererFactory from "./_astro/client.CpC6DKdL.js";
+      import Rocket3DContent from "./_astro/Rocket3DContent.hnJ7ahGX.js";
+
+      const island = document.querySelector("astro-island[uid='1zLHPm']") || document.querySelector("astro-island");
+      if (island) {
+        if (!island.hasAttribute("ssr")) island.setAttribute("ssr", "");
+        const render = rendererFactory(island);
+        render(Rocket3DContent, {}, {}, { client: "only" });
+      }
+
+      const hero = document.getElementById("hero-section");
+      const overlay = document.getElementById("scroll-transition");
+      let virtualScroll = 0;
+      let isNavigating = false;
+
+      const clamp01 = value => Math.min(1, Math.max(0, value));
+
+      const getProgress = () => {
+        const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+        if (maxScroll > 4) {
+          return clamp01(window.scrollY / maxScroll);
+        }
+        return clamp01(virtualScroll / 1400);
+      };
+
+      const animateTransition = () => {
+        if (!hero || !overlay) return;
+        const progress = getProgress();
+        const eased = 1 - Math.pow(1 - progress, 2.2);
+        const heroScale = 1 + eased * 0.12;
+        const overlayOpacity = clamp01((eased - 0.62) * 2.6);
+
+        hero.style.transform = `scale(${heroScale})`;
+        hero.style.filter = `blur(${eased * 2.2}px)`;
+        overlay.style.opacity = String(overlayOpacity);
+
+        if (!isNavigating && progress > 0.98) {
+          isNavigating = true;
+          overlay.classList.add("is-active");
+          setTimeout(() => {
+            window.location.href = "/";
+          }, 520);
+        }
+      };
+
+      window.addEventListener("scroll", animateTransition, { passive: true });
+      window.addEventListener("resize", animateTransition);
+      window.addEventListener("wheel", event => {
+        const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+        if (maxScroll <= 4) {
+          virtualScroll = Math.max(0, Math.min(1400, virtualScroll + event.deltaY));
+          animateTransition();
+        }
+      }, { passive: true });
+
+      const flowerNodes = document.querySelectorAll(".flower-text");
+      flowerNodes.forEach((node, nodeIndex) => {
+        const sourceText = (node.textContent || "").replace(/\s+/g, " ").trim();
+        if (!sourceText) return;
+
+        node.setAttribute("aria-label", sourceText);
+        node.textContent = "";
+
+        const words = sourceText.split(" ");
+        let charCursor = 0;
+        words.forEach((word, wordIndex) => {
+          const wordSpan = document.createElement("span");
+          wordSpan.className = "word";
+          wordSpan.setAttribute("aria-hidden", "true");
+
+          word.split("").forEach(char => {
+            const charSpan = document.createElement("span");
+            charSpan.className = "character FlowerValleyText_character__4j45e FlowerValleyText_isVisible__8vqou";
+            charSpan.setAttribute("aria-hidden", "true");
+            charSpan.style.setProperty("--delay", `${0.02 + (charCursor * 0.012) + (nodeIndex * 0.045)}s`);
+            charSpan.style.setProperty("--duration", "0.25s");
+            charSpan.textContent = char;
+            wordSpan.appendChild(charSpan);
+            charCursor += 1;
+          });
+
+          node.appendChild(wordSpan);
+          if (wordIndex !== words.length - 1) {
+            node.appendChild(document.createTextNode(" "));
+          }
+        });
+      });
+
+      animateTransition();
+    </script>
+
+    <div class="flex flex-col h-full pointer-events-none">
+      <div class="h-60 flex-row"></div>
+      <div class="w-full px-6 h-full">
+        <div class="max-w-7xl mx-auto w-full relative px-auto z-10 flex-row h-full top-0">
+          <div class="grid grid-cols-4 items-end gap-1 h-full sm:grid-cols-8 md:gap-2 lg:grid-cols-12 xl:gap-4">
+            <div class="invisible sm:visible col-span-2 sm:col-start-1 lg:col-start-2 bg-gray-500 ml-auto mr-0 mb-16 text-merino">
+              <ul class="list-inside space-y-5 pointer-events-auto">
+                <li class="font-mono flex items-center justify-end font-normal">
+                  <a href="#about">About</a>
+                  <hr class="border-t-[1px] border-merino w-[50px] ml-4">
+                </li>
+                <li class="font-mono flex items-center justify-end font-normal">
+                  <a href="#for-you">For You</a>
+                  <hr class="border-t-[1px] border-merino w-[50px] ml-4">
+                </li>
+                <li class="font-mono flex items-center justify-end font-normal">
+                  <a href="#solutions">Where we can help</a>
+                  <hr class="border-t-[1px] border-merino w-[50px] ml-4">
+                </li>
+              </ul>
+            </div>
+
+            <div class="col-span-4 sm:col-span-6 lg:col-span-6 col-start-1 sm:col-start-2 lg:col-start-4 text-merino flex justify-center">
+              <div class="hero-content mb-24">
+                <p class="chip flower-text">AuroraWatch Real-Time</p>
+                <div class="text-center">
+                  <div class="flower-title-shell">
+                    <h1 class="flower-text flower-heading">Forecast Platform</h1>
+                    <p class="lead flower-text">Embark on a cosmic journey to witness the universe's most breathtaking light show with our advanced real-time solar tracking and predictive technology.</p>
+                    <div class="actions">
+                      <a class="btn btn-primary" href="/dashboard/index.html"><span class="flower-text">Let's Begin</span></a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

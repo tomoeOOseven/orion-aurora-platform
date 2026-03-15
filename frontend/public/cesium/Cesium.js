@@ -1,0 +1,1 @@
+// Cesium.js placeholder for copy. Please copy the actual Cesium.js file from the landing repo's frontend/public/cesium directory to this location for full functionality.
