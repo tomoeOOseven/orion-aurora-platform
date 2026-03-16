@@ -1,7 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
-import cesium from 'vite-plugin-cesium';
 
 const FRONTEND_PORT = Number(process.env.FRONTEND_PORT || 7000);
 const BACKEND_PORT = Number(process.env.BACKEND_PORT || 7001);
@@ -9,7 +8,6 @@ const BACKEND_PORT = Number(process.env.BACKEND_PORT || 7001);
 export default defineConfig({
   plugins: [
     react(),
-    cesium(),
     VitePWA({
       registerType: 'autoUpdate',
       workbox: {
