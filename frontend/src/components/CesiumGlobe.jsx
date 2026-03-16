@@ -2,8 +2,8 @@ import React, { useCallback, useEffect, useRef } from 'react';
 import * as Cesium from 'cesium';
 import 'cesium/Build/Cesium/Widgets/widgets.css';
 
-// Optionally set your Cesium Ion access token here
-// Cesium.Ion.defaultAccessToken = 'YOUR_TOKEN_HERE';
+// Set your Cesium Ion access token here
+Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJmMDljNjg0Yi05ZjBjLTQ4NDItODJlYi1lYzVjMzNhM2IyYjgiLCJpZCI6NDA0MzgwLCJpYXQiOjE3NzM2NDgyMjl9.TDfVLdeKtOyxeIujvk2Eo-JZhkidVaDb8ZBQjuCagKU';
 
 const RASTER_W = 1440;
 const RASTER_H = 720;
