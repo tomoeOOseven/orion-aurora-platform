@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useRef } from 'react';
+import * as Cesium from 'cesium';
+import 'cesium/Build/Cesium/Widgets/widgets.css';
 
 // Set your Cesium Ion access token here
-window.Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJmMDljNjg0Yi05ZjBjLTQ4NDItODJlYi1lYzVjMzNhM2IyYjgiLCJpZCI6NDA0MzgwLCJpYXQiOjE3NzM2NDgyMjl9.TDfVLdeKtOyxeIujvk2Eo-JZhkidVaDb8ZBQjuCagKU';
-
-const Cesium = window.Cesium;
+Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJmMDljNjg0Yi05ZjBjLTQ4NDItODJlYi1lYzVjMzNhM2IyYjgiLCJpZCI6NDA0MzgwLCJpYXQiOjE3NzM2NDgyMjl9.TDfVLdeKtOyxeIujvk2Eo-JZhkidVaDb8ZBQjuCagKU';
 
 const RASTER_W = 1440;
 const RASTER_H = 720;
@@ -202,8 +202,8 @@ export default function CesiumGlobe({
   useEffect(() => {
     if (!containerRef.current) return;
     if (viewerRef.current) return;
-    // Cesium expects a global CESIUM_BASE_URL for static assets
-    window.CESIUM_BASE_URL = '/cesium';
+    // Cesium expects a global CESIUM_BASE_URL for static assets.
+    window.CESIUM_BASE_URL = '/cesium/Cesium';
     viewerRef.current = new Cesium.Viewer(containerRef.current, {
       timeline: false,
       animation: false,

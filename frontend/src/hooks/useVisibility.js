@@ -1,11 +1,12 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import axios from 'axios';
+import { API_BASE } from '../services/api';
 
 const AUTO_REFRESH_MS = 5 * 60 * 1000;
 
 async function fetchScore(lat, lon) {
   // No bortle param — backend auto-detects from VIIRS DNB
-  const res = await axios.get('/api/visibility', { params: { lat, lon }, timeout: 15000 });
+  const res = await axios.get(`${API_BASE}/visibility`, { params: { lat, lon }, timeout: 15000 });
   return res.data;
 }
 

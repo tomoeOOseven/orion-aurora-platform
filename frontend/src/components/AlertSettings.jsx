@@ -7,11 +7,12 @@
  */
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_BASE } from '../services/api';
 
-async function fetchLocations()       { return (await axios.get('/api/alerts/locations')).data.locations; }
-async function saveLocation(body)     { return (await axios.post('/api/alerts/locations', body)).data.location; }
-async function deleteLocation(id)     { await axios.delete(`/api/alerts/locations/${id}`); }
-async function patchThreshold(id, t)  { return (await axios.patch(`/api/alerts/locations/${id}`, { threshold: t })).data.location; }
+async function fetchLocations()       { return (await axios.get(`${API_BASE}/alerts/locations`)).data.locations; }
+async function saveLocation(body)     { return (await axios.post(`${API_BASE}/alerts/locations`, body)).data.location; }
+async function deleteLocation(id)     { await axios.delete(`${API_BASE}/alerts/locations/${id}`); }
+async function patchThreshold(id, t)  { return (await axios.patch(`${API_BASE}/alerts/locations/${id}`, { threshold: t })).data.location; }
 
 export default function AlertSettings({ position, currentScore, visibilityAlert, onDismissAlert }) {
   const [locations, setLocations] = useState([]);

@@ -9,8 +9,8 @@
  */
 import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-
-const Cesium = window.Cesium;
+import * as Cesium from 'cesium';
+import { API_BASE } from '../services/api';
 
 // ── Sighting form modal ───────────────────────────────────────────────────────
 export function SightingForm({ position, kp, score, onSubmit, onClose }) {
@@ -39,7 +39,7 @@ export function SightingForm({ position, kp, score, onSubmit, onClose }) {
   async function handleSubmit() {
     setSubmitting(true);
     try {
-      await axios.post('/api/sightings', {
+      await axios.post(`${API_BASE}/sightings`, {
         lat: position.lat, lon: position.lon,
         description, username: username || 'Anonymous',
         photoBase64: photo, photoMime, kp, score,
@@ -236,7 +236,7 @@ export function useSightings(eventSource) {
   }
 
   useEffect(() => {
-    axios.get('/api/sightings?limit=100')
+    axios.get(`${API_BASE}/sightings?limit=100`)
       .then(r => {
         setSightings(r.data.sightings);
         writeCache(r.data.sightings || []);

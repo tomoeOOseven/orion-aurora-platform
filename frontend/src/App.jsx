@@ -11,6 +11,7 @@ import SubstormWarning    from './components/SubstormWarning';
 import PhotographyAdvisor from './components/PhotographyAdvisor';
 import RoutingPanel       from './components/RoutingPanel';
 import AlertSettings      from './components/AlertSettings';
+import { API_BASE }       from './services/api';
 
 const CesiumGlobe = lazy(() => import('./components/CesiumGlobe'));
 
@@ -86,7 +87,7 @@ export default function App() {
       timeoutId = window.setTimeout(load, 300);
     }
 
-    const es = new EventSource('/api/stream');
+    const es = new EventSource(`${API_BASE}/stream`);
     setEsRef(es);
     // Visibility alerts from SSE
     es.addEventListener('visibility_alert', e => {
