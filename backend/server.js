@@ -21,7 +21,9 @@ const PORT = process.env.PORT || process.env.BACKEND_PORT || 7001;
 let servicesStarted = false;
 
 // ── Middleware ────────────────────────────────────────────────────────────────
-app.use(cors({ origin: process.env.FRONTEND_URL || `http://localhost:${FRONTEND_PORT}` }));
+app.use(cors({
+  origin: "https://your-vercel-app.vercel.app"
+}));
 app.use(express.json({ limit: '2mb' })); // allow base64 photo uploads
 app.use('/uploads', express.static(path.join(__dirname, 'data', 'sightings_photos')));
 app.use((req, _res, next) => {
