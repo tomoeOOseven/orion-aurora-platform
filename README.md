@@ -8,7 +8,7 @@
 ## Live Demo
 
 ```
-Frontend (Vercel): [Visit Orion Aurora Platform](https://orion-aurora-platform.vercel.app/)
+Frontend (Vercel): https://orion-aurora-platform.vercel.app/
 Backend (Render):  Deployed on Render (Node.js/Express API)
 ```
 
